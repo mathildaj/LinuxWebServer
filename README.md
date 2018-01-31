@@ -6,8 +6,13 @@ This project takes a baseline Amazon Lightsail Linux Server, and prepares it to 
 3. Installing and configuring a Postgresql database server
 4. Deploying a Flask-Python web application onto it
 
-Public IP for the web application: 34.210.193.162
-Public URL for the web application: http://ec2-34-210-193-162.us-west-2.compute.amazonaws.com
+
+### Public IP for the web application: 34.210.193.162
+
+
+### Public URL for the web application: http://ec2-34-210-193-162.us-west-2.compute.amazonaws.com
+
+
 
 ## Obtaining an Amazon Lightsail instance
 
