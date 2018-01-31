@@ -7,26 +7,36 @@ This project takes a baseline Amazon Lightsail Linux Server, and prepares it to 
 4. Deploying a Flask-Python web application onto it
 
 
+
 ## Obtaining an Amazon Lightsail instance
+
 
 1. Create an AWS account
 
+
 ![alt text](aws_login.jpg)
+
 
 2. Create a Lightsail instance. Choose OS Only, and Ubuntu.
 
+
 ![alt text](ubuntu_instance.jpg)
+
 
 3. Give the instance a hostname, and start up the instance. It may take a few minutes.
 
 4. Once you have an instance, you will be given a public IP address. Write it down.
 
 
+
 ## SSH access to the instance
+
 
 1. Download your SSH private key from your AWS Lightsail Account page. It should end with .pem
 
+
 ![alt text](ssh_key.jpg)
+
 
 2. Open a command prompt on your local computer, then move the private key file into ~/.ssh folder. For example:
 
@@ -47,7 +57,9 @@ $ ssh -i ~/.ssh/Lightsailkey.perm ubuntu@YourPublicIP
 ```
 
 
+
 ## Change port from 22 to 2200
+
 
 1. On your Amazon Lightsail instance page, find Networking tab. Under Firewall, add Custom, TCP, 2200.
 
@@ -74,7 +86,9 @@ $ ssh -i ~/.ssh/Lightsailkey.pem -p 2200 ubuntu@YourPublicIP
 ```
 
 
+
 ## Disable SSH for root user
+
 
 ```
 $ sudo nano /etc/ssh/sshd_config
@@ -89,7 +103,9 @@ $ sudo service ssh restart
 ```
 
 
+
 ## Configure firewall on the instance
+
 
 1. Still login as ubuntu, first check the firewall status. It should be inactive.
 
@@ -119,7 +135,9 @@ $ sudo ufw status
 ```
 
 
+
 ## Create a new user grader for the instance
+
 
 1. Still login as ubuntu, Add the grader user
 
@@ -138,7 +156,9 @@ $ sudo nano /etc/sudoers.d/grader
 Type grader ALL=(ALL:ALL) NOPASSWD:ALL, then save the file. (Ctrl+X, Y, Enter)
 
 
+
 ## Make key based authentication for the new user grader
+
 
 1. Start a new command prompt on your local computer (Not login to the AWS instance), generate a SSH key pair.
 
@@ -199,7 +219,9 @@ $ sudo service ssh restart
 ```
 
 
+
 ## Configure timezone to UTC
+
 
 ```
 $ sudo dpkg-reconfigure tzdata
@@ -208,7 +230,9 @@ $ sudo dpkg-reconfigure tzdata
 Select None of the above, then UTC.
 
 
+
 ## Update currently installed packages on the AWS instance
+
 
 ```
 $ sudo apt-get update
@@ -216,7 +240,10 @@ $ sudo apt-get upgrade
 ```
 
 
+
 ## Install Apache and WSGI on the AWS instance
+
+
 ```
 $ sudo apt-get install apache2
 $ sudo apt-get install python-setuptools libapache2-mod-wsgi
@@ -236,7 +263,9 @@ $ sudo service apache2 restart
 ```
 
 
+
 ## Install and configure PostgreSQL on the AWS instance
+
 
 1. Install PostgreSQL
 
@@ -262,7 +291,9 @@ postgres@ip-xxx-xx-x-xx:~$ exit
 ```
 
 
+
 ## Install Git and clone your web application on the AWS instance
+
 
 1. Install git
 
@@ -281,7 +312,7 @@ $ sudo git clone https://github.com/mathildaj/Catalog.git catalog
 
 3. Make .git unaccessible from the browser
 
-In directory FlaskApp:
+In /var/www/FlaskApp directory:
 
 ```
 $ nano ~/.htaccess
@@ -296,7 +327,9 @@ $ sudo mv ~/.htaccess .htaccess
 ```
 
 
+
 ## Setup your web application to run on the AWS instance
+
 
 1. In /var/www directory:
 
@@ -304,7 +337,7 @@ $ sudo mv ~/.htaccess .htaccess
 $ sudo chown -R ubuntu:ubuntu FlaskApp
 ```
 
-1. In directory FlaskApp:
+1. In  /var/www/FlaskApp directory:
 
 ```
 $ cd catalog
@@ -313,7 +346,7 @@ $ sudo mv views.py __init__.py
 
 2. Change the database engine to run on PostgreSQL instead of SQLite:
 
-In directory catalog:
+In /var/www/FlaskApp/catalog directory:
 
 ```
 $ sudo nano __init__.py
@@ -356,7 +389,9 @@ $ sudo pip install --user flask-oauthlib
 ```
 
 
+
 ## Create a virtual host on the AWS instance
+
 
 1. Create a configuration file for your website
 
