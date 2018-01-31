@@ -7,12 +7,6 @@ This project takes a baseline Amazon Lightsail Linux Server, and prepares it to 
 4. Deploying a Flask-Python web application onto it
 
 
-### Public IP for the web application: 34.210.193.162
-
-
-### Public URL for the web application: http://ec2-34-210-193-162.us-west-2.compute.amazonaws.com
-
-
 
 ## Obtaining an Amazon Lightsail instance
 
@@ -64,20 +58,19 @@ $ ssh -i ~/.ssh/Lightsailkey.perm ubuntu@YourPublicIP
 
 
 
-## Change port from 22 to 2200
+## Change default port 22 to xxxx (xxxx is the port number you add)
 
 
-1. On your Amazon Lightsail instance page, find Networking tab. Under Firewall, add Custom, TCP, 2200.
+1. On your Amazon Lightsail instance page, find Networking tab. Under Firewall, add Custom, TCP, xxxx.
 
-![alt text](firewall.jpg)
 
-2. On your command prompt, as you still login as ubuntu, modify sshd_config file to accept Port 2200.
+2. On your command prompt, as you still login as ubuntu, modify sshd_config file to accept Port xxxx.
 
 ```
 $ sudo nano /etc/ssh/sshd_config
 ```
 
-Change Port 22 to Port 2200, and save the change (Ctrl+X, Y, Enter).
+Change Port 22 to Port xxxx, and save the change (Ctrl+X, Y, Enter).
 
 Then restart the SSH service:
 
@@ -85,10 +78,10 @@ Then restart the SSH service:
 $ sudo service ssh restart
 ```
 
-3. Now try to SSH into the instance using Port 2200
+3. Now try to SSH into the instance using Port xxxx
 
 ```
-$ ssh -i ~/.ssh/Lightsailkey.pem -p 2200 ubuntu@YourPublicIP
+$ ssh -i ~/.ssh/Lightsailkey.pem -p xxxx ubuntu@YourPublicIP
 ```
 
 
@@ -119,20 +112,20 @@ $ sudo service ssh restart
 $ sudo ufw status
 ```
 
-2. Configure firewall
+2. Configure firewall (xxxx is your new SSH port you have set earlier)
 
 ```
 $ sudo ufw default deny incoming
 $ sudo ufw default allow outgoing
 $ sudo ufw allow ssh
-$ sudo ufw allow 2200/tcp
+$ sudo ufw allow xxxx/tcp
 $ sudo ufw allow www
 $ sudo ufw allow 80/tcp
 $ sudo ufw allow 123/udp
 $ sudo ufw deny 22
 ```
 
-Note: Please be very careful here. Make sure to allow ssh and 2200 BEFORE you deny 22 and enable the firewall so you don't lose your ssh access to your instance.
+Note: Please be very careful here. Make sure to allow ssh and xxxx (your new SSH port) BEFORE you deny 22 and enable the firewall so you don't lose your ssh access to your instance.
 
 3. Enable firewall. After enabling, you can check the status again.
 
@@ -286,13 +279,13 @@ $ sudo apt-get install postgresql
 $ cat /etc/postgresql/9.5/main/pg_hba.conf
 ```
 
-3. Create database user catalog and database catalog (replace CreatePassword with your real password)
+3. Create database user and the database for the web application (replace YourUser with your real user name, YourDB with your real DB name, and CreatePassword with your real password)
 
 ```
 $ sudo su - postgres
 $ psql
-postgres=# create user catalog with password 'CreatePassword';
-postgres=# create database catalog owner catalog;
+postgres=# create user YourUser with password 'CreatePassword';
+postgres=# create database YourDB owner YourUser;
 postgres=# \q
 postgres@ip-xxx-xx-x-xx:~$ exit
 ```
@@ -359,9 +352,9 @@ In /var/www/FlaskApp/catalog directory:
 $ sudo nano __init__.py
 ```
 
-Then change engine = create_engine('sqlite:///catalog.db') to engine = create_engine('postgresql://catalog:password@localhost/catalog'), and save.
+Then change engine = create_engine('sqlite:///YourDB.db') to engine = create_engine('postgresql://YourDB:YourDBPassword@localhost/catalog'), and save.
 
-Make the same change to database engine on database_setup.py, and database_init.py.
+Make the same change to the database engine on database_setup.py, and database_init.py.
 
 3. Make sure __init__.py file has the correct Google Client ID and Secret. They are needed for Google Oauth login.
    You can also use a separate client_secret.json file to store the Google credentials.
@@ -388,11 +381,6 @@ $ sudo pip install psycopg2
 $ cd /var/www/FlaskApp/catalog
 $ sudo python database_setup.py
 $ sudo python database_init.py
-$ sudo pip install httplib2
-$ sudo pip install requests
-$ sudo pip install oauth2client
-$ sudo pip install Flask-OAuthlib
-$ sudo pip install --user flask-oauthlib
 ```
 
 
