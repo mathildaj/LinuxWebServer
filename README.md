@@ -129,9 +129,10 @@ $ sudo ufw allow 2200/tcp
 $ sudo ufw allow www
 $ sudo ufw allow 80/tcp
 $ sudo ufw allow 123/udp
+$ sudo ufw deny 22
 ```
 
-Note: Please be very careful here. Make sure to allow ssh and 2200 BEFORE you enable the firewall so you don't lose your ssh access to your instance.
+Note: Please be very careful here. Make sure to allow ssh and 2200 BEFORE you deny 22 and enable the firewall so you don't lose your ssh access to your instance.
 
 3. Enable firewall. After enabling, you can check the status again.
 
